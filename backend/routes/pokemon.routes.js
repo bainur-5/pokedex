@@ -4,21 +4,21 @@ const router = new Router()
 const pokemonController = require('../controller/pokemon.controller');
 
 // Маршрут для создания нового покемона
-router.post('/pokemon', pokemonController.createPokemon);
+router.post('/', pokemonController.createPokemon);
 
 // Маршрут для получения списка всех покемонов
-router.get('/pokemon', pokemonController.getAllPokemon);
+router.get('/', pokemonController.getAllPokemon);
 
 // Маршрут для получения информации о конкретном покемоне
-router.get('/pokemon/:id', pokemonController.getOnePokemon);
+router.get('/:id', pokemonController.getOnePokemon);
 
 // Маршрут для поиска покемонов по типу
-router.get('/pokemon/type/:type', pokemonController.getPokemonByType);
+router.get('/type/:type', pokemonController.getPokemonByType);
 
 // Маршрут для обновления информации о покемоне
-router.put('/pokemon/:id', pokemonController.updatePokemon);
+router.put('/:id', pokemonController.updatePokemon);
 
 // Маршрут для удаления покемона
-router.delete('/pokemon/:id', pokemonController.deletePokemon);
+router.delete('/:id', pokemonController.deletePokemon);
 
 module.exports = router;

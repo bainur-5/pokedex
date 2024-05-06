@@ -2,66 +2,62 @@
 
 const pool = require("../db");
 
-// async function createPokemon(req, res) {
-//   const {
-//     name,
-//     index_number,
-//     main_type,
-//     minor_type,
-//     abilities,
-//     character,
-//     habitat,
-//     description,
-//     image_title,
-//     image_main,
-//     height,
-//     weight,
-//     special_ability,
-//     background_gradient,
-//     gender,
-//   } = req.body; // Предполагается, что данные приходят в теле запроса
+async function createPokemon(req, res) {
+  const {
+    name,
+    index_number,
+    main_type,
+    minor_type,
+    abilities,
+    character,
+    habitat,
+    description,
+    image_title,
+    image_main,
+    height,
+    weight,
+    special_ability,
+    background_gradient,
+    gender,
+  } = req.body; // Предполагается, что данные приходят в теле запроса
 
-//   // Проверка обязательных полей
-//   if (!name || !index_number || !main_type || !description  ) {
-//     return res
-//       .status(400)
-//       .json({ error: "Необходимо заполнить все обязательные поля" });
-//   }
+  // Проверка обязательных полей
+  if (!name || !index_number || !main_type || !description  ) {
+    return res
+      .status(400)
+      .json({ error: "Необходимо заполнить все обязательные поля" });
+  }
 
-//   try {
-//     // Выполнение запроса к базе данных для создания нового покемона
-//     const result = await pool.query(
-//       "INSERT INTO pokemon (name, index_number, main_type, minor_type, abilities, character, habitat, description, image_title, image_main, height, weight, special_ability, background_gradient, gender) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) RETURNING *",
-//       [
-//         name,
-//         index_number,
-//         main_type,
-//         minor_type,
-//         abilities,
-//         character,
-//         habitat,
-//         description,
-//         image_title,
-//         image_main,
-//         height,
-//         weight,
-//         special_ability,
-//         background_gradient,
-//         gender,
-//       ]
-//     );
+  try {
+    // Выполнение запроса к базе данных для создания нового покемона
+    const result = await pool.query(
+      "INSERT INTO pokemon (name, index_number, main_type, minor_type, abilities, character, habitat, description, image_title, image_main, height, weight, special_ability, background_gradient, gender) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) RETURNING *",
+      [
+        name,
+        index_number,
+        main_type,
+        minor_type,
+        abilities,
+        character,
+        habitat,
+        description,
+        image_title,
+        image_main,
+        height,
+        weight,
+        special_ability,
+        background_gradient,
+        gender,
+      ]
+    );
 
-//     res.status(201).json(result.rows[0]); // Возвращаем созданный покемон
-//   } catch (error) {
-//     console.error("Ошибка при создании нового покемона:", error);
-//     res.status(500).json({ error: "Ошибка сервера" });
-//   }
-// }
-async function createPokemon ( req, res){
-    const {name} = req.body
-    console.log(name);
-    res.json('ok')
+    res.status(201).json(result.rows[0]); // Возвращаем созданный покемон
+  } catch (error) {
+    console.error("Ошибка при создании нового покемона:", error);
+    res.status(500).json({ error: "Ошибка сервера" });
+  }
 }
+
 
 async function getAllPokemon(req, res) {
     
