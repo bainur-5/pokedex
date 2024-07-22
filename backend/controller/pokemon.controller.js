@@ -12,67 +12,61 @@ async function createPokemon(req, res) {
     character,
     habitat,
     description,
-    image_title,
-    image_main,
+    image_title, // Данные должны быть в формате base64 или бинарные
+    image_main,  // Данные должны быть в формате base64 или бинарные
     height,
     weight,
     special_ability,
     background_gradient,
     gender,
-  } = req.body; // Предполагается, что данные приходят в теле запроса
+  } = req.body;
 
   // Проверка обязательных полей
-  if (!name || !index_number || !main_type || !description  ) {
+  if (!name || !index_number || !main_type || !description) {
     return res
       .status(400)
-      .json({ error: "Необходимо заполнить все обязательные поля" });
+      .json({ error: `Необходимо заполнить все обязательные поля, ${name}, ${index_number}, ${main_type}, ${description} `});
   }
 
   try {
+    // Конвертация изображений в Buffer
+    const imageTitleBuffer = image_title ? Buffer.from(image_title, 'base64') : null;
+    const imageMainBuffer = image_main ? Buffer.from(image_main, 'base64') : null;
+
     // Выполнение запроса к базе данных для создания нового покемона
     const result = await pool.query(
-      "INSERT INTO pokemon (name, index_number, main_type, minor_type, abilities, character, habitat, description, image_title, image_main, height, weight, special_ability, background_gradient, gender) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) RETURNING *",
+      `INSERT INTO pokemon (
+        name, index_number, main_type, minor_type, abilities, character, habitat, description,
+        image_title, image_main, height, weight, special_ability, background_gradient, gender
+      ) VALUES (
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15
+      ) RETURNING *`,
       [
-        name,
-        index_number,
-        main_type,
-        minor_type,
-        abilities,
-        character,
-        habitat,
-        description,
-        image_title,
-        image_main,
-        height,
-        weight,
-        special_ability,
-        background_gradient,
-        gender,
+        name, index_number, main_type, minor_type, abilities, character, habitat, description,
+        imageTitleBuffer, imageMainBuffer, height, weight, special_ability, background_gradient, gender
       ]
     );
 
     res.status(201).json(result.rows[0]); // Возвращаем созданный покемон
   } catch (error) {
     console.error("Ошибка при создании нового покемона:", error);
-    res.status(500).json({ error: "Ошибка сервера" });
+    res.status(500).json({ error: "Ошибка сервера :", error });
   }
 }
 
-
 async function getAllPokemon(req, res) {
     
-    res.json('ok')
-//   pool.query("SELECT * FROM pokemon", (err, result) => {
-//     if (err) {
-//       console.error(
-//         "Ошибка при получении списка покемонов из базы данных:",
-//         err
-//       );
-//       res.status(500).json({ error: "Ошибка сервера" });
-//     } else {
-//       res.json(result.rows);
-//     }
-//   });
+  pool.query("SELECT * FROM pokemon", (err, result) => {
+    if (err) {
+      console.error(
+        "Ошибка при получении списка покемонов из базы данных:",
+        err
+      );
+      res.status(500).json({ error: "Ошибка сервера" });
+    } else {
+      res.json(result.rows);
+    }
+  });
 }
 
 async function getOnePokemon(req, res) {
